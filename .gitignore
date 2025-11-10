@@ -1,0 +1,6 @@
+devenv.lock
+.devenv.flake.nix
+.devenv
+.git/
+package-lock.json
+node_modules/
