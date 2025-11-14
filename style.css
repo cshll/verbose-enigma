@@ -1,0 +1,48 @@
+:root {
+  --primary: white;
+  --secondary: #2A7B9B;
+  --gradient: #0D263B;
+  --text-primary: black;
+  --text-secondary: white;
+}
+
+body {
+  background-color: var(--primary);
+  font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6.25rem;
+  padding: 1rem;
+  color: var(--text-secondary);
+  background: var(--secondary);
+  background: linear-gradient(33deg, var(--secondary) 0%, var(--gradient) 100%);
+}
+
+header h2 {
+  font-weight: 300;
+  font-size: 1.25rem;
+}
+
+main {
+  position: absolute;
+  top: 9rem;
+  left: 0;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+}
+
+header * {
+  font-size: 1.5rem;
+}
+
+main * {
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 400;
+}
