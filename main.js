@@ -80,10 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
           fetchOperation('show_rows');
           break;
 
-        case 'guardian':
-          fetchOperation('show_rows')
-          break;
-
         case 'class':
           chooseClass();
           break;
