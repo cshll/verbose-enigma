@@ -89,8 +89,8 @@ document.addEventListener('DOMContentLoaded', () => {
     await fetchOperation('select_key');
 
     // Find the types element.
-    const selectElement = document.getElementById('types');
-    const handleSelectionChange = (event) => {
+    const selectElementTypes = document.getElementById('types');
+    const handleSelectionChangeTypes = (event) => {
       // Grab the users input within the dropdown.
       const selectedValue = event.target.value;
 
@@ -110,8 +110,24 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     };
 
+    const selectElementObjects = document.getElementById('objects');
+    const handleSelectionChangeObjects = (event) => {
+      const selectedValue = event.target.value;
+
+      switch (selectedValue) {
+        case 'pupil':
+          fetchOperation('create_pupil');
+          break;
+
+        case 'teacher':
+          fetchOperation('create_teacher');
+          break;
+      }
+    };
+
     // Check for any changes to the dropdown selection.
-    selectElement.addEventListener('change', handleSelectionChange);
+    selectElementTypes.addEventListener('change', handleSelectionChangeTypes);
+    selectElementObjects.addEventListener('change', handleSelectionChangeObjects);
   };
 
   const login = async () => {
