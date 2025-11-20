@@ -159,5 +159,5 @@ document.addEventListener('DOMContentLoaded', () => {
   login();
 
   backButton.addEventListener('click', () => { fetchOperation(lastOperation); });
-  returnButton.addEventListener('click', login);
+  returnButton.addEventListener('click', logout);
 });
