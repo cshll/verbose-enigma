@@ -10,8 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const returnButton = document.getElementById('return');
 
   // Save current operations for the navigation.
-  var lastOperation = 'select_key';
-  var thisOperation = 'select_key';
+  var lastOperation = 'login';
+  var thisOperation = 'login';
 
   const fetchOperation = async (operation) => {
     console.log(`Attempting to load '${operation}'`)
@@ -146,11 +146,18 @@ document.addEventListener('DOMContentLoaded', () => {
     loginForm.addEventListener('submit', handleSubmit);
   };
 
+  const logout = async () => {
+    lastOperation = 'login';
+    thisOperation = 'login';
+
+    // logout code
+
+    login();
+  };
+
   // Show the login page before anything else.
   login();
 
-  //selectKey();
-
-  //backButton.addEventListener('click', () => { selectKey(lastOperation); });
-  //returnButton.addEventListener('click', selectKey);
+  backButton.addEventListener('click', () => { fetchOperation(lastOperation); });
+  returnButton.addEventListener('click', login);
 });
