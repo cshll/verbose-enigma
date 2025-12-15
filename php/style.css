@@ -1,153 +1,268 @@
-/* Body */
-
 :root {
-  --primary: white;
-  --secondary: #2A7B9B;
-  --content: #E9E6E6;
-  --gradient: #0D263B;
-  --text-primary: black;
-  --text-secondary: white;
-  --smooth-transition: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --primary-electric: #2A7B9B;
+  --accent-sand: #F4E1D2;
+
+  --bg-main: #FFFFFF;
+  --bg-offwhite: #F8FAF9;
+  --bg-screen: #E0E5E4;
+
+  --text-slate: #031625;
+  --text-grey: #607D8B;
+  --text-on-electric: #053258;
+  --text-white: #FFFFFF;
+
+  --footer-bg: #0D263B;
+
+  --grad-river: linear-gradient(135deg, #2A7B9B 0%, #0D263B 100%);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  background-color: var(--primary);
-  font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: 'Inter', sans-serif;
+  background-color: #E0E5E4;
+  color: var(--text-slate);
+  line-height: 1.6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   min-height: 100vh;
+  padding: 20px;
+}
+
+.app-container {
+  background-color: var(--bg-main);
+  width: 100%;
+  max-width: 375px;
+  border-radius: 20px;
   overflow-x: hidden;
   overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 750px;
+  position: relative;
+  scroll-behavior: smooth;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-/* Header */
+.app-container::-webkit-scrollbar {
+  display: none;
+}
 
-header {
+h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+p {
+  margin-bottom: 16px;
+}
+
+.app-header {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-container {
+  background-color: var(--bg-offwhite);
+  padding: 20px 20px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex: 0 0 auto;
+  scroll-behavior: smooth;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.card-container::-webkit-scrollbar {
+  display: none;
+}
+
+.row-box {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.column-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-avatar {
+  border-radius: 10px;
+}
+
+.card-title {
+  font-weight: 600;
+}
+
+.card-header {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.nobtn {
+  border: none;
+  background-color: white;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.nobtn:hover {
+  transform: translateY(-1px);
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 50px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.btn-primary-grad {
+  background: var(--grad-river);
+  color: var(--text-white);
+  box-shadow: 0 4px 12px rgba(96, 125, 139, 0.3);
+  transition: transform 0.2s;
+}
+
+.btn-primary-grad:hover {
+  transform: translateY(-1px);
+}
+
+.app-footer {
+  margin-top: auto;
+  background-color: var(--footer-bg);
+  color: var(--text-white);
+  box-shadow: 0 -4px 10px var(--primary-electric);
+  padding: 10px 20px;
+  text-align: center;
+}
+
+.footer-copy {
+  margin-top: 10px;
+  font-size: 0.75rem;
+  opacity: 0.5;
+}
+
+.overlay {
+  height: 100%;
+  width: 0;
   position: absolute;
+  z-index: 100;
   top: 0;
   left: 0;
+  background-color: var(--footer-bg);
+  overflow-x: hidden;
+  transition: 0.5s;
+}
+
+.overlay-content {
+  position: relative;
+  top: 15%;
   width: 100%;
-  height: 6.25rem;
-  padding: 1rem;
-  color: var(--text-secondary);
-  background: var(--secondary);
-  background: linear-gradient(33deg, var(--secondary) 0%, var(--gradient) 100%);
-  display: flex;
-  align-items: center;
-  box-shadow: -1rem 0rem 1rem var(--text-primary);
+  text-align: center;
+  margin-top: 30px;
 }
 
-header h2 {
-  font-weight: 300;
-  font-size: 1.25rem;
-}
-
-header h3,
-header a {
-  font-size: 1rem;
-  font-weight: 300;
-}
-
-header a {
-  max-height: 2rem;
+.overlay a {
+  padding: 8px;
   text-decoration: none;
-  border-radius: 0.5rem;
-  padding: 0.5rem;
-  background-color: var(--gradient);
-  color: var(--text-secondary);
-  transition: transform 0.3s var(--smooth-transition);
+  font-size: 24px;
+  color: var(--text-white);
+  display: block;
+  transition: 0.3s;
 }
 
-header a:hover {
+.overlay a:hover,
+.overlay a:focus {
+  color: var(--bg-screen);
   transform: scale(1.05);
 }
 
-header * {
-  font-size: 1.5rem;
-}
-
-header #right {
-  margin-left: auto;
-  padding-right: 2rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Content */
-
-main {
+.overlay .closebtn {
   position: absolute;
-  top: 8.25rem;
-  left: 0;
-  margin-left: 1rem;
-  margin-right: 1rem;
-  width: 100%;
+  top: 10px;
+  right: 20px;
+  font-size: 40px;
 }
 
-main * {
-  color: var(--text-primary);
-  font-size: 1rem;
-  font-weight: 400;
+.rq-text {
+  color: lightcoral;
 }
 
-#return {
-  margin-top: 1rem;
-  margin-left: 0.4rem;
-}
-
-/* Containers */
-
-#container {
-  width: 90%;
-  margin-top: 1rem;
-  background-color: var(--content);
-  padding: 1rem;
-  border-radius: 1rem;
-}
-
-input,
-textarea,
-select {
-  border: none;
-  border-radius: 0.25rem;
-  background-color: var(--primary);
+.error-text {
+  color: red;
 }
 
 table {
-  width: 100%;
-  background-color: var(--primary);
+  background-color: var(--bg-main);
   border-collapse: collapse;
 }
 
 th,
 td {
-  padding: 0.5rem;
-  border: 0.1rem solid var(--content);
+  padding: 5px;
+  border: 1px solid var(--text-grey);
 }
 
 th {
   background-color: lightgray;
 }
 
-#container label {
-  display: inline-block;
-  margin-top: 0.25rem;
-  margin-bottom: 0.15rem;
-}
-
-#btext {
+.accordion {
+  background-color: lightgray;
+  cursor: pointer;
+  padding: 10px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  outline: none;
+  transition: 0.4s;
+  margin-top: 5px;
+  border-radius: 4px;
+  font-size: 1rem;
   font-weight: 600;
-  font-size: 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-#htext {
-  font-weight: 600;
-  font-size: 1.1rem;
+.active,
+.accordian:hover {
+  background-color: var(--bg-offwhite)
 }
 
-#rq {
-  color: lightcoral;
+.class-badge {
+  font-weight: 300;
+  font-size: 0.75rem;
 }
 
-#error {
-  color: red;
+.panel {
+  padding: 0 18px;
+  background-color: var(--bg-offwhite);
+  display: none;
+  overflow: hidden;
+  margin-bottom: 10px;
 }
