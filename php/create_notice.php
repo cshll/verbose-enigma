@@ -12,10 +12,19 @@ if ($_SESSION['usertype'] != 'admin') {
 
 require 'connect.php';
 
-if (isset($_POST['date'], $_POST['description'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['date'], $_POST['description'])) {
   $notice_date = $_POST['date'];
-  $notice_title = trim($_POST['title']);
-  $notice_description = trim($_POST['description']);
+  $date_object = DateTime::createFromFormat('Y-m-d', $notice_date);
+  if (!$date_object || $date_object->format('Y-m-d') !== $notice_date) {
+    die("Invalid birthday provided.");
+  }
+
+  $notice_title = trim(strip_tags($_POST['title']));
+
+  $notice_description = trim(strip_tags($_POST['description']));
+  if (empty($notice_description)) {
+    die("Invalid description provided.");
+  }
 
   try {
     $stmt = $pdo->prepare("INSERT INTO notices (description, notice_date, title) VALUES (?, ?, ?)");

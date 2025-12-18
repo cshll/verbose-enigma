@@ -12,35 +12,32 @@ if ($_SESSION['usertype'] == 'admin') {
   die("403: You can access this but you don't need to.");
 }
 
-if (isset($_POST['current_password'], $_POST['new_password'], $_POST['confirm_password'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $user_id = $_SESSION['userid'];
-  $current_password = $_POST['current_password'];
-  $new_password = $_POST['new_password'];
-  $confirm_password = $_POST['confirm_password'];
+  $current_password = $_POST['current_password'] ?? '';
+  $new_password = $_POST['new_password'] ?? '';
+  $confirm_password = $_POST['confirm_password'] ? '';
 
-  try {
-    if (!empty($new_password)) {
-      if (strlen($new_password) < 8) {
-        $error_msg = "Password needs to be at least 8 characters.";
-      } elseif (!preg_match('/[A-Z]/', $new_password)) {
-        $error_msg = "Password must contain a capital letter.";
-      } elseif (!preg_match('/[0-9]/', $new_password)) {
-        $error_msg = "Password must contain a number";
-      }
-    }
+  if (empty($current_password) || empty($new_password) || empty($confirm_password)) {
+    $error_msg = "All fields must be entered.";
+  } elseif ($new_password !== $confirm_password) {
+    $error_msg = "Password does not match.";
+  } elseif (strlen($new_password) < 8 ||
+    !preg_match('/[A-Z]/', $new_password) ||
+    !preg_match('/[0-9]/', $new_password)
+  ) {
+    $error_msg = "Password must be at least 8 characters, contain a number, and a capital letter.";
+  } 
 
-    if (empty($error_msg)) {
+  if (empty($error_msg)) {
+    try {
       $stmt = $pdo->prepare("SELECT password_hash FROM users WHERE user_id = :user_id");
       $stmt->execute(['user_id' => $user_id]);
       $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-      if ($new_password != $confirm_password) {
-        $error_msg = 'Passwords do not match.';
-      } elseif (!password_verify($current_password, $user['password_hash'])) {
+      if (!password_verify($current_password, $user['password_hash'])) {
         $error_msg = 'Current password is not correct.';
-      }
-      
-      if (empty($error_msg)) {
+      } else {
         $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
 
         $user_sql = "UPDATE users SET 
@@ -53,9 +50,9 @@ if (isset($_POST['current_password'], $_POST['new_password'], $_POST['confirm_pa
           'user_id' => $user_id
         ]);
       }
+    } catch (PDOException $error) {
+      $error_msg = $error->getMessage();//TODO: 'Unknown error.';
     }
-  } catch (PDOException $error) {
-    $error_msg = $error->getMessage();//TODO: 'Unknown error.';
   }
 }
 ?>

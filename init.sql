@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS notices (
   title VARCHAR(20)
 );
 
-CREATE TABLE IF NOT EXISTS behavioural_notices (
+CREATE TABLE IF NOT EXISTS behavioral_notices (
   bnotice_id INT AUTO_INCREMENT PRIMARY KEY,
   description TEXT NOT NULL,
   notice_date DATE NOT NULL,
