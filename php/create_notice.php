@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['date'], $_POST['descr
     echo '<script>window.history.back();</script>';
     exit;
   } catch (PDOException $error) {
-    die("Error creating notice: " . $error->getMessage());
+    die("Unknown error!");
   }
 } else {
   echo '<script>window.history.back();</script>';

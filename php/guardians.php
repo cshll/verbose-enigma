@@ -101,7 +101,7 @@ $guardians = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php else: ?>
           <label class="card-text">No guardians found.</label>
         <?php endif; ?>
-        <br><button class="btn btn-primary-grad">Create Guardian</button>
+        <br><a href="create_guardian.php" class="btn btn-primary-grad">Create Guardian</a>
       </div>
 
       <footer class="app-footer">

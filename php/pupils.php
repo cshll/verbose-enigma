@@ -103,7 +103,7 @@ $pupils = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php else: ?>
           <label class="card-text">No pupils found.</label>
         <?php endif; ?>
-        <br><button class="btn btn-primary-grad">Create Pupil</button>
+        <br><a href="create_pupil.php" class="btn btn-primary-grad">Create Pupil</a>
       </div>
 
       <footer class="app-footer">

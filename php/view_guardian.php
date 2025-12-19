@@ -122,11 +122,11 @@ if (!$guardian) {
           ><br>
         </section>
 
-        <section class="card-container">
-          <?php if ($_SESSION['usertype'] == 'admin'): ?>
+        <?php if ($_SESSION['usertype'] == 'admin'): ?>
+          <section class="card-container">
             <button class="btn btn-primary-grad" name="submit" onclick="return confirm('Are you sure you want to save changes?')">Save All Changes</button>
-          <?php endif; ?>
-        </section>
+          </section>
+        <?php endif; ?>
 
         <input type="hidden" name="id" value="<?php echo htmlspecialchars($guardian['guardian_id']); ?>">
       </form>
@@ -134,7 +134,10 @@ if (!$guardian) {
       <?php if ($_SESSION['usertype'] == 'admin'): ?>
         <section class="card-container">
           <label class="card-header">Admin Controls</label><br><br>
-          <a class="btn btn-primary-grad" href="delete_guardian.php?id=<?php echo $guardian['guardian_id']; ?>" onclick="return confirm('Are you sure you want to delete this guardian? This cannot be undone.')">Delete Guardian</a>
+          <form action="delete_guardian.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this guardian? This cannot be undone.');" style="display: inline;">
+            <input type="hidden" name="id" value="<?php echo $guardian['guardian_id']; ?>">
+            <button class="btn btn-primary-grad" type="submit">Delete Guardian</button>
+          </form>
         </section>
       <?php endif; ?>
 

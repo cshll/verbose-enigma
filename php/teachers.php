@@ -98,7 +98,7 @@ $teachers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php else: ?>
           <label class="card-text">No teachers found.</label>
         <?php endif; ?>
-        <br><button class="btn btn-primary-grad">Create Teacher</button>
+        <br><a href="create_teacher.php" class="btn btn-primary-grad">Create Teacher</a>
       </div>
 
       <footer class="app-footer">

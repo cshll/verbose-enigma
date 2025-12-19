@@ -12,7 +12,7 @@ if ($_SESSION['usertype'] != 'admin') {
   die("403: You are not authorized to access this resource.");
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['id'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
   $guardian_id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
   if (!$guardian_id || $guardian_id <= 0) {
     die("Invalid guardian ID provided.");
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['id'])) {
     echo '<script>window.history.back();</script>';
     exit;
   } catch (PDOException $error) {
-    die("Error deleting guardian from guardian: " . $error->getMessage());
+    die("Unknown error!");
   }
 } else {
   echo '<script>window.history.back();</script>';

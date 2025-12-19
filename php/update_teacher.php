@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'], $_POST['full_na
     echo '<script>window.history.back();</script>';
     exit;
   } catch (PDOException $error) {
-    die("Error updating teacher: " . $error->getMessage());
+    die("Unknown error!");
   }
 } else {
   echo '<script>window.history.back();</script>';

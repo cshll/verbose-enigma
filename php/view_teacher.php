@@ -73,9 +73,6 @@ if (!$teacher) {
           <label class="card-title" for="full_name">Full Name: </label>
           <input type="text" name="full_name" 
             value="<?php echo $teacher['full_name']; ?>" 
-            <?php if ($_SESSION['usertype'] != 'admin'): ?>
-              readonly style="cursor: not-allowed;"
-            <?php endif; ?> 
             required 
             pattern="[a-zA-Z\s\-\']+"
           ><br>
@@ -83,9 +80,6 @@ if (!$teacher) {
           <label class="card-title" for="address">Address: </label>
           <input type="text" name="address" 
             value="<?php echo $teacher['address']; ?>"
-            <?php if ($_SESSION['usertype'] != 'admin'): ?>
-              readonly style="cursor: not-allowed;"
-            <?php endif; ?> 
             required 
             pattern="^[a-zA-Z0-9\s,.'\-\/&]+$"
           ><br>
@@ -97,9 +91,6 @@ if (!$teacher) {
           <label class="card-title" for="email">Email: </label>
           <input type="email" name="email" 
             value="<?php echo $teacher['email']; ?>"
-            <?php if ($_SESSION['usertype'] != 'admin'): ?>
-              readonly style="cursor: not-allowed;"
-            <?php endif; ?> 
             required
             autocomplete="email"
           ><br>
@@ -107,9 +98,6 @@ if (!$teacher) {
           <label class="card-title" for="phone_number">Phone Number: </label>
           <input type="tel" name="phone_number" 
             value="<?php echo $teacher['phone_number']; ?>"
-            <?php if ($_SESSION['usertype'] != 'admin'): ?>
-              readonly style="cursor: not-allowed;"
-            <?php endif; ?> 
             required
             autocomplete="tel" 
             pattern="^0[0-9\s]*$"
@@ -117,9 +105,7 @@ if (!$teacher) {
         </section>
 
         <section class="card-container">
-          <?php if ($_SESSION['usertype'] == 'admin'): ?>
-            <button class="btn btn-primary-grad" name="submit" onclick="return confirm('Are you sure you want to save changes?')">Save All Changes</button>
-          <?php endif; ?>
+          <button class="btn btn-primary-grad" name="submit" onclick="return confirm('Are you sure you want to save changes?')">Save All Changes</button>
         </section>
 
         <input type="hidden" name="id" value="<?php echo htmlspecialchars($teacher['teacher_id']); ?>">
@@ -127,7 +113,10 @@ if (!$teacher) {
 
       <section class="card-container">
         <label class="card-header">Admin Controls</label><br><br>
-        <a class="btn btn-primary-grad" href="delete_teacher.php?id=<?php echo $teacher['teacher_id']; ?>" onclick="return confirm('Are you sure you want to delete this teacher? This cannot be undone.')">Delete Teacher</a>
+        <form action="delete_teacher.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this teacher? This cannot be undone.');" style="display: inline;">
+          <input type="hidden" name="id" value="<?php echo $teacher['teacher_id']; ?>">
+          <button class="btn btn-primary-grad" type="submit">Delete Teacher</button>
+        </form>
       </section>
 
       <footer class="app-footer">

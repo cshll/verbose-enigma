@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       $error_msg = 'Invalid username or password.';
     }
   } catch (PDOException $error) {
-    $error_msg = $error->getMessage();//TODO: 'Unknown error.';
+    $error_msg = "Unknown error!";
   }
 }
 ?>

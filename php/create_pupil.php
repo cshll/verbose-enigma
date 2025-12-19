@@ -8,31 +8,71 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
   exit;
 }
 
-if ($_SESSION['usertype'] != 'admin' && $_SESSION['usertype'] != 'teacher') {
+if ($_SESSION['usertype'] != 'admin') {
   die("403: You are not authorized to access this resource.");
 }
-
-$pupil_stmt = $pdo->prepare("SELECT pupils.* FROM pupils WHERE pupil_id = :pupil_id");
-$pupil_stmt->execute(['pupil_id' => $_GET['id']]);
-$pupil = $pupil_stmt->fetch(PDO::FETCH_ASSOC);
 
 try {
   $class_sql = "SELECT classes.class_id, classes.name 
   FROM classes 
   LEFT JOIN pupils ON classes.class_id = pupils.class_id 
   GROUP BY classes.class_id, classes.name, classes.capacity 
-  HAVING COUNT(pupils.pupil_id) < classes.capacity OR classes.class_id = :class_id 
+  HAVING COUNT(pupils.pupil_id) < classes.capacity 
   ORDER BY classes.name ASC";
 
-  $class_stmt = $pdo->prepare($class_sql);
-  $class_stmt->execute(['class_id' => $pupil['class_id']]);
+  $class_stmt = $pdo->query($class_sql);
   $classes = $class_stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $error) {
   die("Unknown error!");
 }
 
-if (!$pupil) {
-  die("Pupil not found!");
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['full_name'], $_POST['birthday'], $_POST['address'], $_POST['class_id'])) {
+  $class_id = filter_input(INPUT_POST, 'class_id', FILTER_VALIDATE_INT);
+  if (!$class_id || !in_array($class_id, array_column($classes, 'class_id'))) {
+    die("Invalid class ID provided.");
+  }
+
+  $full_name = trim(strip_tags($_POST['full_name']));
+  if (empty($full_name) || strlen($full_name) > 100 || strlen($full_name) < 2) {
+    die("Invalid full name provided.");
+  }
+
+  $birthday = $_POST['birthday'];
+  $date_object = DateTime::createFromFormat('Y-m-d', $birthday);
+  if (!$date_object || $date_object->format('Y-m-d') !== $birthday) {
+    die("Invalid birthday provided.");
+  }
+
+  $today = new DateTime();
+  if ($date_object > $today) {
+    die("Invalid birthday provided.");
+  }
+
+  $address = trim(strip_tags($_POST['address']));
+  if (empty($address)) {
+    die("Invalid address provided.");
+  }
+  
+  $medical_info = !empty($_POST['medical_info']) ? trim(strip_tags($_POST['medical_info'])) : null;
+
+  try {
+    $pupil_sql = "INSERT INTO pupils (full_name, address, birthday, medical_info, class_id) 
+    VALUES (:full_name, :address, :birthday, :medical_info, :class_id)";
+
+    $stmt = $pdo->prepare($pupil_sql);
+    $stmt->execute([
+      'full_name' => $full_name,
+      'address' => $address,
+      'birthday' => $birthday,
+      'medical_info' => $medical_info,
+      'class_id' => $class_id
+    ]);
+
+    echo '<script>window.history.back();</script>';
+    exit;
+  } catch (PDOException $error) {
+    die("Unknown error!");
+  }
 }
 ?>
 
@@ -55,11 +95,7 @@ if (!$pupil) {
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 
         <div class="overlay-content">
-          <a href="#" style="font-weight: 700;">Viewing Pupil</a>
-
-          <?php if ($_SESSION['usertype'] != 'admin'): ?>
-            <a href="my_settings.php">My Settings</a>
-          <?php endif; ?>
+          <a href="#" style="font-weight: 700;">Creating Pupil</a>
 
           <a href="index.php">Dashboard</a>
 
@@ -67,9 +103,7 @@ if (!$pupil) {
           <a href="pupils.php">Pupils</a>
           <a href="guardians.php">Guardians</a>
 
-          <?php if ($_SESSION['usertype'] == 'admin'): ?>
-            <a href="teachers.php">Teachers</a>
-          <?php endif; ?>
+          <a href="teachers.php">Teachers</a>
         </div>
       </div>
 
@@ -88,62 +122,36 @@ if (!$pupil) {
         </section>
       </header>
 
-      <form action="update_pupil.php" method="POST">
+      <form action="create_pupil.php" method="POST">
         <section class="card-container">
           <label class="card-header">Pupil Information</label><br>
           <label class="card-title" for="full_name">Full Name: </label>
           <input type="text" name="full_name" 
-            value="<?php echo $pupil['full_name']; ?>" 
-            <?php if ($_SESSION['usertype'] != 'admin'): ?>
-              readonly style="cursor: not-allowed;"
-            <?php endif; ?> 
             required 
             pattern="[a-zA-Z\s\-\']+"
           ><br>
 
           <label class="card-title" for="birthday">Date of Birth: </label>
           <input type="date" name="birthday"
-            value="<?php echo date('Y-m-d', strtotime($pupil['birthday'])); ?>"
-            <?php if ($_SESSION['usertype'] != 'admin'): ?>
-              readonly style="cursor: not-allowed;"
-            <?php endif; ?> 
             required
           ><br>
 
           <label class="card-title" for="address">Address: </label>
           <input type="text" name="address" 
-            value="<?php echo $pupil['address']; ?>"
-            <?php if ($_SESSION['usertype'] != 'admin'): ?>
-              readonly style="cursor: not-allowed;"
-            <?php endif; ?> 
             required 
             pattern="^[a-zA-Z0-9\s,.'\-\/&]+$"
           ><br>
 
           <label class="card-title" for="medical_info">Medical Information: </label><br>
-          <textarea name="medical_info" rows="4" cols="46"
-            <?php if ($_SESSION['usertype'] != 'admin'): ?>
-              readonly style="cursor: not-allowed;"
-            <?php endif; ?>
-          ><?php echo htmlspecialchars($pupil['medical_info'] ?: 'None recorded'); ?></textarea>
+          <textarea name="medical_info" rows="4" cols="46"></textarea>
         </section>
 
         <section class="card-container">
           <label for="class_id" class="card-header">Class</label><br>
-          <select name="class_id" id="class_id" required
-            <?php if ($_SESSION['usertype'] != 'admin'): ?>
-              readonly style="cursor: not-allowed;"
-            <?php endif; ?>
-          >
+          <select name="class_id" id="class_id" required>
             <option value="">Select Class</option>
             <?php foreach ($classes as $class): ?>
-              <option value="<?php echo htmlspecialchars($class['class_id']); ?>"
-                <?php
-                  if ($class['class_id'] == $pupil['class_id']) {
-                    echo 'selected';
-                  }
-                ?>
-              >
+              <option value="<?php echo htmlspecialchars($class['class_id']); ?>">
                 <?php echo htmlspecialchars($class['name']); ?>
               </option>
             <?php endforeach; ?>
@@ -153,25 +161,11 @@ if (!$pupil) {
         <section class="card-container">
           <label class="card-header">Guardians</label><br>
         </section> 
-        
-        <?php if ($_SESSION['usertype'] == 'admin'): ?>
-          <section class="card-container">
-            <button class="btn btn-primary-grad" name="submit" onclick="return confirm('Are you sure you want to save changes?')">Save All Changes</button>
-          </section>
-        <?php endif; ?>
 
-        <input type="hidden" name="id" value="<?php echo htmlspecialchars($pupil['pupil_id']); ?>">
-      </form>
-
-      <?php if ($_SESSION['usertype'] == 'admin'): ?>
         <section class="card-container">
-          <label class="card-header">Admin Controls</label><br><br>
-          <form action="delete_pupil.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this pupil? This cannot be undone.');" style="display: inline;">
-            <input type="hidden" name="id" value="<?php echo $pupil['pupil_id']; ?>">
-            <button class="btn btn-primary-grad" type="submit">Delete Pupil</button>
-          </form>
+          <button class="btn btn-primary-grad" name="submit" onclick="return confirm('Are you sure you want to save changes?')">Save All Changes</button>
         </section>
-      <?php endif; ?>
+      </form>
 
       <footer class="app-footer">
         <p class="footer-copy">St Alphonsus Primary School<br>Control Panel</p>
